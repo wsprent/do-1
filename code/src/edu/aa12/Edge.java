@@ -16,7 +16,14 @@ public class Edge {
 		}
 		return false;
 	}
-	
+
+	public int hashCode(){
+		int hash = 17;
+		hash = hash * 31 + this.u;
+		hash = hash * 31 + this.v;
+		return hash;
+	}
+
 	public String toString(){
 		return String.format("Edge[%d-%d]",u,v);
 	}
