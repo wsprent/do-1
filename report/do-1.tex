@@ -3,8 +3,11 @@
 \usepackage{babel}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
+
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{bm}
 
 \begin{document}
 \title{Discrete Optimization Assignment 1}
@@ -14,9 +17,107 @@
 \clearpage
 
 \section{Theoretical part - formulation and lower bounds}
+Given a complete graph $G = (V, E, c)$ where $V$ is the set of vertices with
+$|V| = n$, $E$ is the set of edges, and $c_{ij}$ is the cost
+of the edge $(i,j) \in E$, then the TSP problem is defined as finding a
+ Hamiltonian tour of $G$ which has minimum total cost.
+ \subsection{}
+ Equation (\ref{eq:tsp:subtour}) defines the  ``subtour''  formulation
+  for the TSP problem  an Integer
+  Linear Program.
+ \begin{equation}
+   \label{eq:tsp:subtour}
+   \begin{aligned}
+     & \underset{x_{ij}}{\text{minimize}}
+     & & \sum_{i,j \in V} x_{ij}c_{ij} \\
+     & \text{subject to}
+     & & \sum_{j \in V, i \neq j} x_{ij} = 1 \quad i \in V \\
+     & & & \sum_{i \in V, i \neq j} x_{ij} = 1 \quad j \in V \\
+     & & & \sum_{i,j \in S} x_{ij} \leq |S| - 1 \quad S \subset V, 2 \leq |S| \leq n-2 \\
+     & & & x_{ij} \in \{0,1\}
+   \end{aligned}
+ \end{equation}
+ We wish to show that this formulation is correct. That is that any feasible
+ solution to the TSP problem is a feasible solution to
+ the ILP.
+ \begin{proof}
+   We will prove this by construction in two cases; first
+ we will show that given a solution, $S_{TSP}$, we can construct an equivalent
+ feasible solution $S_{ILP}$ to the ILP, and subsequently the other way around.
+ 
+ \paragraph{Case 1 ($S_{TSP} \to S_{ILP}$)}
+ A feasible solution the the TSP problem consists of a Hamiltonian tour, that
+ is a permutation of the vertices $V$ or in other words a path in $G$ which visits
+  every vertice exactly one. We then denote this path as,
+  $$S_{TSP} = \{p_1, p_2, ..., p_n \}$$
+ whichs defines the path
+  $$p^* = \left\{ (p_1, p_2), (p_2, p_3),\ldots,(p_{n-1}, p_{n}), (p_n, p_1) \right\}$$
+  where $p_i \neq p_j$ for $i\neq j$ follows directly from $S_{TSP}$
+   being a Hamiltonian tour. This solution has the total cost
+  $$C_{{TSP}} = c_{p_1p_2} + ... + c_{p_{n-1}p_{n}} + c_{p_{n}p_1}\mathnormal{.}$$
+  We then construct a solution, $S_{ILP}$, to the ILP as follows,
+  $$x_{ij} =
+  \begin{cases}
+    1 & (i,j) \in p^* \\
+    0 & \text{otherwise.}
+  \end{cases}
+  $$
+  It follows directly from this assignment that the ILP
+  solution has the same cost as the TSP solution,
+$$C_{ILP} = \sum_{i,j \in V} x_{ij}c_{ij} = \sum_{(i,j) \in p^*} 1c_{ij} + \sum_{(i,j) \not\in p^*} 0c_{ij} =  \sum_{(i,j) \in p^*} c_{ij} = C_{{TSP}}\mathnormal{.}$$
+It is then left to show that all the constraints of (\ref{eq:tsp:subtour}) are
+satisfied. Since $S_{TSP}$ is a permutation of $V$ we can equivalently state
+the first constraint as
+$$\sum_{j \in V, i \neq j} x_{p_ip_j} = 1 \quad i \in V$$
+and note that
+$$\sum_{j \in V, i \neq j} x_{p_ip_j} = \underbrace{\ldots + x_{p_i p_i}}_{=0} +
+\underbrace{x_{p_i p_{i+1}}}_{=1} + \underbrace{x_{p_i p_{i+2}} + \ldots}_{=0} = 1\mathnormal{.}$$
 
-\subsection{}
-Proof of correctness for subtour formulation.
+follows directly from $p^*$ and our assignment of $x_{ij}$ (where we technically
+ have $i+1 = (i \mod n) + 1$). Similarly, we have
+$$\sum_{i \in V, i \neq j} x_{p_ip_j} = \underbrace{\ldots + x_{p_{j-1} p_j}}_{=1} +
+\underbrace{x_{p_{j} p_j} + x_{p_{j+2} p_j} + \ldots}_{=0} = 1$$
+Hence the first two constraints are satisfied.
+
+For the subtour constraint, we once again note that we can equivalently state
+the constraint in terms of our permutation $S_{TSP}$, and we note that we
+\textit{only} have $x_{p_i p_j} = 1$ if either $j = i + 1$ or $i = n$ and $j = 1$.
+Hence, given a subset $S \subset V$ with size $|S|$, we can have at most
+$|S| - 1$ pairs $(i, i+1)$, which means we have
+$$\sum_{i,j \in S} x_{p_i p_j} \leq |S| - 1 \quad S \subset V, 2 \leq |S| \leq n-2\mathnormal{.}$$
+Finally, the $\{0,1\}$ constraint is fulfilled directly by the
+assignment of $x_{ij}$.
+ \paragraph{Case 2 ($S_{ILP} \to S_{TSP}$)}
+ Given a solution, $S_{ILP}$, to (\ref{eq:tsp:subtour}) which consists of an assignment of $\bm X = x_{ij}$, we can construct a hamiltonian tour as follows:
+ \begin{enumerate}
+ \item Set $S_{TSP} = \emptyset$ and $i = 1$.
+ \item Traverse the $i$th row of $\bm X$ from $1,...,n$ until a variable $x_{i,j} = 1$ is found.
+ \item Set $S_{TSP} = S_{TSP} \cup \{i\}$ and $i = j$.
+ \item If $j = 1$ return $S_{TSP}$; else go to step 2.
+ \end{enumerate}
+ The first constraint of (\ref{eq:tsp:subtour}) ensures that each row, $i$,
+ of $\bm X$ will
+ have exactly one $x_{i,j} = 1$ which implies that step 2 will always find a
+ variable $x_{i,j} = 1$. Likewise the second constraint ensures that step 4 will
+ go to each row at most once. Hence we have $p_i \neq p_j$  if $i \neq j$
+ for all $p_i, p_j \in S_{TSP}$.
+
+ To show that $S_{TSP}$ defines a permutation of $V$, we must then show that
+ $|S_{TSP}| = |V|$. The only way we can have $|S_{TSP}| < |V|$ is if there
+ exists a sequence $s_1, s_2, \ldots, s_m$ where $m < n$ such that
+ $$x_{s_1 s_2} = x_{s_2 s_3} = \ldots = x_{s_{m-1} s_m} =  x_{s_{m} s_1} =  1\mathnormal{.}$$
+ Let $S = \{s_1, s_2, \ldots, s_m \}$ then we have
+ $$\sum_{s_i, s_j\in S} x_{s_i s_j} + x_{s_1 s_2} + x_{s_2 s_3} + \ldots + x_{s_{m-1} s_m} +  x_{s_{m} s_1} = |S|$$
+ if $m \leq n-2$ then this violates the subtour constraint which is in contradiction
+  with $S_{ILP}$ being a feasible solution. If $m = n -1$ we
+ must have that there exists a single unvisited row, $k$, which only has
+ $x_{k,\cdot} = 1$ on $x_{kk}$, which would violate the first constraint which is
+ also a contradiction.
+
+ Hence $S_{TSP}$ must a permutation of $V$ defining a Hamiltonian tour. Since
+ we selected $p_i \in S_{TSP}$ iff. $x_{p_{i-1} p_i} = 1$ we will also have that
+  the path defined by $S_{TSP}$ will have the same cost as $S_{ILP}$.
+ \end{proof}
 
 \subsection{}
 Number of constraints in the subtour formulation.
