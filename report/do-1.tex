@@ -37,9 +37,7 @@ of the edge $(i,j) \in E$, then the asymmetric TSP problem is defined as finding
      & & & x_{ij} \in \{0,1\}
    \end{aligned}
  \end{equation}
- We wish to show that this formulation is correct. That is that any feasible
- solution to the TSP problem is a feasible solution to
- the ILP.
+ We wish to show that this formulation is correct, that is, that a TSP solution is feasible if and only if it satisfies the ILP constraints.
  \begin{proof}
    We will prove this by construction in two cases; first
  we will show that given a solution, $S_{TSP}$, we can construct an equivalent
@@ -47,9 +45,10 @@ of the edge $(i,j) \in E$, then the asymmetric TSP problem is defined as finding
  
  \paragraph{Case 1 ($S_{TSP} \to S_{ILP}$)}
  A feasible solution the the TSP problem consists of a Hamiltonian tour, which is a permutation of the vertices $V$ or, in other words, a cyclic path in $G$ which visits
-  every vertex exactly once. We then denote this path as,
-  $$S_{TSP} = \{p_1, p_2, \dots, p_n \}$$
- whichs defines the path
+  every vertex exactly once. We denote this permutation as
+  $$S_{TSP} = (p_1, p_2, \dots, p_n )$$
+  % use parentheses (ordered set) instead of brackets (set) to indicate that the order matters
+  where each $p_i$ bijectively maps to a vertex in $V$. The permutation defines the path
   $$p^* = \left\{ (p_1, p_2), (p_2, p_3),\ldots,(p_{n-1}, p_{n}), (p_n, p_1) \right\}$$
   where $p_i \neq p_j$ for $i\neq j$ follows directly from $S_{TSP}$
    being a Hamiltonian tour. This solution has the total cost
@@ -68,24 +67,25 @@ It is then left to show that all the constraints of (\ref{eq:tsp:subtour}) are
 satisfied. Since $S_{TSP}$ is a permutation of $V$ we can equivalently state
 the first constraint as
 $$\sum_{j \in V, i \neq j} x_{p_ip_j} = 1 \quad i \in V$$
-and note that
-$$\sum_{j \in V, i \neq j} x_{p_ip_j} = \underbrace{\ldots + x_{p_i p_i}}_{=0} +
+and note that for any $i \in V$
+$$\sum_{j \in V, i \neq j} x_{p_ip_j} = \underbrace{\ldots + x_{p_i p_{i-1}}}_{=0} +
 \underbrace{x_{p_i p_{i+1}}}_{=1} + \underbrace{x_{p_i p_{i+2}} + \ldots}_{=0} = 1\mathnormal{.}$$
-This follows directly from $p^*$ and our assignment of $x_{ij}$ (where we technically should have $i+1 \mod n$). Similarly, we have
-$$\sum_{i \in V, i \neq j} x_{p_ip_j} = \underbrace{\ldots + x_{p_{j-1} p_j}}_{=1} +
-\underbrace{x_{p_{j} p_j} + x_{p_{j+2} p_j} + \ldots}_{=0} = 1$$
+This follows directly from $p^*$ and our assignment of $x_{ij}$ (where we technically should have $i+1 \mod n$). Similarly, for any $j \in V$, we have
+$$\sum_{i \in V, i \neq j} x_{p_ip_j} = \underbrace{\ldots + x_{p_{j-2} p_j}}_{=0} +
+\underbrace{x_{p_{j-1} p_j}}_{=1} + \underbrace{x_{p_{j+1} p_j} + \ldots}_{=0} = 1\mathnormal{.}$$
+% could be i and j instead of p_i and p_j, but this makes it clearer, maybe. I don't think it would be an equivalent formulation to write \sum_{i,j \in S} x_{p_ip_j} <= ... since there then wouldn't be any direct relationship between i and p_i, and j and p_j.
 Hence the first two constraints are satisfied.
 
 For the subtour constraint, we once again note that we can equivalently state
 the constraint in terms of our permutation $S_{TSP}$, and we note that we
-\textit{only} have $x_{p_i p_j} = 1$ if either $j = i + 1$ or $i = n$ and $j = 1$.
-Hence, given a subset $S \subset V$ with size $|S|$, we can have at most
-$|S| - 1$ pairs $(i, i+1)$, which means we have
-$$\sum_{i,j \in S} x_{p_i p_j} \leq |S| - 1 \quad S \subset V, 2 \leq |S| \leq n-2\mathnormal{.}$$
+\textit{only} have $x_{p_i p_j} = 1$ if $j = i + 1 \mod n$.
+Hence, given a subset $S \subset V$ with size $|S| < n$, we can have at most
+$|S| - 1$ pairs $(p_i, p_j)$, which means we have
+$$\sum_{p_i,p_j \in S} x_{p_i p_j} \leq |S| - 1 \quad S \subset V, 2 \leq |S| \leq n-2\mathnormal{.}$$
 Finally, the $\{0,1\}$ constraint is fulfilled directly by the
 assignment of $x_{ij}$.
  \paragraph{Case 2 ($S_{ILP} \to S_{TSP}$)}
- Given a solution, $S_{ILP}$, to (\ref{eq:tsp:subtour}) which consists of an assignment of $\bm X = x_{ij}$, we can construct a hamiltonian tour as follows:
+ Given a solution, $S_{ILP}$, to (\ref{eq:tsp:subtour}) which consists of an assignment of $\bm X = x_{ij}$, we want to construct a TSP solution $S_{TSP}$. For it to be feasible, it must be a permutation of $V$. We construct it as follows:
  \begin{enumerate}
  \item Set $S_{TSP} = \emptyset$ and $i = 1$.
  \item Traverse the $i$th row of $\bm X$ from $1,\dots,n$ until a variable $x_{i,j} = 1$ is found.
@@ -97,22 +97,22 @@ assignment of $x_{ij}$.
  have exactly one $x_{i,j} = 1$ which implies that step 2 will always find a
  variable $x_{i,j} = 1$. Likewise the second constraint ensures that step 4 will
  go to each row at most once. Hence we have $p_i \neq p_j$  if $i \neq j$
- for all $p_i, p_j \in S_{TSP}$.
+ for all $p_i, p_j \in S_{TSP}$, i.e. all added vertices are unique.
 
- To show that $S_{TSP}$ defines a permutation of $V$, we must then show that
- $|S_{TSP}| = |V|$. The only way we can have $|S_{TSP}| < |V|$ is if there
- exists a sequence $s_1, s_2, \ldots, s_m$ where $m < n$ such that
+ For $S_{TSP}$ to define a permutation of $V$, we must show that $|S_{TSP}| = n$.
+We prove by contradiction that $|S_{TSP}| \geq n$. Let $S_{TSP}$ be constructed from a feasible ILP solution $S_{ILP}$ and assume $|S_{TSP}| = m, m < n$. By the construction procedure, $S_{TSP}$ must consist of vertices $s_1,s_2,\dots,s_m$ such that
  $$x_{s_1 s_2} = x_{s_2 s_3} = \ldots = x_{s_{m-1} s_m} =  x_{s_{m} s_1} =  1\mathnormal{.}$$
- Let $S = \{s_1, s_2, \ldots, s_m \}$ then we have
- $$\sum_{s_i, s_j\in S} x_{s_i s_j} = x_{s_1 s_2} + x_{s_2 s_3} + \ldots + x_{s_{m-1} s_m} +  x_{s_{m} s_1} = |S|$$
- If $m \leq n-2$ then this violates the subtour constraint which is in contradiction
+Then we have
+ $$\sum_{s_i, s_j\in S_{TSP}} x_{s_i s_j} = x_{s_1 s_2} + x_{s_2 s_3} + \ldots + x_{s_{m-1} s_m} +  x_{s_{m} s_1} = |S_{TSP}|.$$
+If $m \leq n-2$ then this violates the subtour constraint which is in contradiction
   with $S_{ILP}$ being a feasible solution. If $m = n -1$ we
  must have that there exists a single unvisited row, $k$, which only has
  $x_{k,\cdot} = 1$ on $x_{kk}$, which would violate the first constraint which is
  also a contradiction.
+Therefore $m = |S_{TSP}| \geq n$.  As all vertices are unique, $|S_{TSP}| \leq n$, and we have $|S_{TSP}| = n$.
 
  Hence $S_{TSP}$ must be a permutation of $V$ defining a Hamiltonian tour. Since
- we selected $p_i \in S_{TSP}$ iff. $x_{p_{i-1} p_i} = 1$ we will also have that
+ we selected $i,j \in S_{TSP}$ iff. $x_{ij} = 1$ we will also have that
   the path defined by $S_{TSP}$ will have the same cost as $S_{ILP}$.
  \end{proof}
 
