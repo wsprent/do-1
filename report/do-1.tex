@@ -156,8 +156,15 @@ Why subtour formulation might be preferred over compact formulation.
 Because the added t variable make the linear relaxation much weaker than the subtour. Further explanation needed.
 
 \subsection{}
-Proof lower bound.
+We consider the subset of edges of $G$ consisting of a tree together with an additional edge incident to vertex 1 such that vertex 1 is in a cycle. For reference, we call this a 1-cycle. We wish to show that the minimum cost of the 1-cycle is a lower bound for for the minimum cost Hamiltonian tour.
 
+\begin{proof}
+Let $S$ be a minimum cost Hamiltonian tour and $T$ be a minimum cost 1-cycle of a graph $G$. We need to show that $c(S) \geq c(T)$.
+
+Vertex 1 is connected to $S$ with two edges. If we remove one of these two edges, $e$, we have a tree. If we add the shortest edge $e'$ incident to vertex 1, we have a 1-cycle $T'$. Since $c(e) \geq c(e')$, then $c(S) \geq c(T') \geq c(T)$.
+\end{proof}
+
+Intuitively, the 1-cycle is similar to the 1-tree, but is a lower bound for the 1-tree, since any 1-tree is a 1-cycle (but not vice versa). As the 1-tree is also a lower bound for the TSP, it is thus a stronger lower bound than 1-cycle.
 \clearpage
 
 \section{Implementation part - branch-and-bound}
