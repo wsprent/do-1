@@ -120,13 +120,43 @@ assignment of $x_{ij}$.
  \end{proof}
 
 \subsection{}
-Number of constraints in the subtour formulation.
+From Equation (1) in 1.1 we have the definition of the "sub-tour" formulation for the TSP problem an ILP. From the sub-tour constraint we have 
+$$\sum_{i,j \in S} x_{p_i p_j} \leq |S| - 1 \quad S \subset V, 2 \leq |S| \leq n-2\mathnormal{.}$$
+From this we can determine the number of constraints in terms of n.
+The number of possible sets in V can be found to be $2^n$. 
+The constraints consist of all possible sets in V devoid of the S = V, the empty set, all sets of size one and sets of size n-1. 
+
+Because there are as many sets of size one and of size n-1 as there are vertices, it follows that these subsets that cannot be included in the constraints amount to 2n. 
+
+As well the empty and full set are unique sets and together amount to 2. 
+Thus the number of constraints in terms of n can be formulated to be $$2^n - 2(n+1)$$.
 
 \subsection{}
-Number of constraints in the compact formulation.
+Equation (2) represents the compact formulation.  
+ \begin{equation}
+   \label{eq:tsp:subtour}
+   \begin{aligned}
+     & \underset{x_{ij}}{\text{minimize}}
+     & & \sum_{i,j \in V} x_{ij}c_{ij} \\
+     & \text{subject to}
+     & & \sum_{j \in V, i \neq j} x_{ij} = 1 \quad i \in V \\
+     & & & \sum_{i \in V, i \neq j} x_{ij} = 1 \quad j \in V \\
+     & & & t_{j} \geq t_{i} + 1 - n(1-x_{ij} )\\
+     & & & i\in V, j\in V \backslash \{1\} \\
+     & & & x_{ij} \in \{0,1\}\\
+     & & & t_{i}\in\mathbb{R}_+
+   \end{aligned}
+ \end{equation}
+ 
+ Let $t_{i}$ be integers or real numbers representing the order in which the vertices are visited. Thus if $t_{i} = 1$, vertex $i$ is the first vertex visited.
+The constraints are of the form $$t_{j} \geq t_{i} + 1 - n(1-x_{ij} )$$ The compact formulation has fewer constraints than the constraints for Equation (1).
+In terms of n there are n*(n-1) constraints.
+
+The constraint states if there is an edge from vertex $i$ to $j$ such that $x_{ij} = 1$ the value of $t_{j}$ must be at least one greater than $t_{i}$. Thus the formulation has constraints consisting of $n$ possible values for $t_{i}$ and $(n-1)$ possible values for $t_{j}$ because the 1 vertex is not included in the $j$ set. For this reason the number of constraints in terms of n can be represented by $$n(n-1)$$
 
 \subsection{}
 Why subtour formulation might be preferred over compact formulation.
+Because the added t variable make the linear relaxation much weaker than the subtour. Further explanation needed.
 
 \subsection{}
 Proof lower bound.
