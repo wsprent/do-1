@@ -17,13 +17,13 @@
 \clearpage
 
 \section{Theoretical part - formulation and lower bounds}
-Given a complete graph $G = (V, E, c)$ where $V$ is the set of vertices with
+Given a complete directed graph $G = (V, E, c)$ where $V$ is the set of vertices with
 $|V| = n$, $E$ is the set of edges, and $c_{ij}$ is the cost
-of the edge $(i,j) \in E$, then the TSP problem is defined as finding a
+of the edge $(i,j) \in E$, then the asymmetric TSP problem is defined as finding a
  Hamiltonian tour of $G$ which has minimum total cost.
  \subsection{}
  Equation (\ref{eq:tsp:subtour}) defines the  ``subtour''  formulation
-  for the TSP problem  an Integer
+  for the asymmetric TSP problem  an Integer
   Linear Program.
  \begin{equation}
    \label{eq:tsp:subtour}
@@ -46,15 +46,14 @@ of the edge $(i,j) \in E$, then the TSP problem is defined as finding a
  feasible solution $S_{ILP}$ to the ILP, and subsequently the other way around.
  
  \paragraph{Case 1 ($S_{TSP} \to S_{ILP}$)}
- A feasible solution the the TSP problem consists of a Hamiltonian tour, that
- is a permutation of the vertices $V$ or in other words a path in $G$ which visits
-  every vertice exactly one. We then denote this path as,
-  $$S_{TSP} = \{p_1, p_2, ..., p_n \}$$
+ A feasible solution the the TSP problem consists of a Hamiltonian tour, which is a permutation of the vertices $V$ or, in other words, a cyclic path in $G$ which visits
+  every vertex exactly once. We then denote this path as,
+  $$S_{TSP} = \{p_1, p_2, \dots, p_n \}$$
  whichs defines the path
   $$p^* = \left\{ (p_1, p_2), (p_2, p_3),\ldots,(p_{n-1}, p_{n}), (p_n, p_1) \right\}$$
   where $p_i \neq p_j$ for $i\neq j$ follows directly from $S_{TSP}$
    being a Hamiltonian tour. This solution has the total cost
-  $$C_{{TSP}} = c_{p_1p_2} + ... + c_{p_{n-1}p_{n}} + c_{p_{n}p_1}\mathnormal{.}$$
+  $$C_{{TSP}} = c_{p_1p_2} + \dots + c_{p_{n-1}p_{n}} + c_{p_{n}p_1}\mathnormal{.}$$
   We then construct a solution, $S_{ILP}$, to the ILP as follows,
   $$x_{ij} =
   \begin{cases}
@@ -72,9 +71,7 @@ $$\sum_{j \in V, i \neq j} x_{p_ip_j} = 1 \quad i \in V$$
 and note that
 $$\sum_{j \in V, i \neq j} x_{p_ip_j} = \underbrace{\ldots + x_{p_i p_i}}_{=0} +
 \underbrace{x_{p_i p_{i+1}}}_{=1} + \underbrace{x_{p_i p_{i+2}} + \ldots}_{=0} = 1\mathnormal{.}$$
-
-follows directly from $p^*$ and our assignment of $x_{ij}$ (where we technically
- have $i+1 = (i \mod n) + 1$). Similarly, we have
+This follows directly from $p^*$ and our assignment of $x_{ij}$ (where we technically should have $i+1 \mod n$). Similarly, we have
 $$\sum_{i \in V, i \neq j} x_{p_ip_j} = \underbrace{\ldots + x_{p_{j-1} p_j}}_{=1} +
 \underbrace{x_{p_{j} p_j} + x_{p_{j+2} p_j} + \ldots}_{=0} = 1$$
 Hence the first two constraints are satisfied.
@@ -91,7 +88,7 @@ assignment of $x_{ij}$.
  Given a solution, $S_{ILP}$, to (\ref{eq:tsp:subtour}) which consists of an assignment of $\bm X = x_{ij}$, we can construct a hamiltonian tour as follows:
  \begin{enumerate}
  \item Set $S_{TSP} = \emptyset$ and $i = 1$.
- \item Traverse the $i$th row of $\bm X$ from $1,...,n$ until a variable $x_{i,j} = 1$ is found.
+ \item Traverse the $i$th row of $\bm X$ from $1,\dots,n$ until a variable $x_{i,j} = 1$ is found.
  \item Set $S_{TSP} = S_{TSP} \cup \{i\}$ and $i = j$.
  \item If $j = 1$ return $S_{TSP}$; else go to step 2.
  \end{enumerate}
@@ -107,14 +104,14 @@ assignment of $x_{ij}$.
  exists a sequence $s_1, s_2, \ldots, s_m$ where $m < n$ such that
  $$x_{s_1 s_2} = x_{s_2 s_3} = \ldots = x_{s_{m-1} s_m} =  x_{s_{m} s_1} =  1\mathnormal{.}$$
  Let $S = \{s_1, s_2, \ldots, s_m \}$ then we have
- $$\sum_{s_i, s_j\in S} x_{s_i s_j} + x_{s_1 s_2} + x_{s_2 s_3} + \ldots + x_{s_{m-1} s_m} +  x_{s_{m} s_1} = |S|$$
- if $m \leq n-2$ then this violates the subtour constraint which is in contradiction
+ $$\sum_{s_i, s_j\in S} x_{s_i s_j} = x_{s_1 s_2} + x_{s_2 s_3} + \ldots + x_{s_{m-1} s_m} +  x_{s_{m} s_1} = |S|$$
+ If $m \leq n-2$ then this violates the subtour constraint which is in contradiction
   with $S_{ILP}$ being a feasible solution. If $m = n -1$ we
  must have that there exists a single unvisited row, $k$, which only has
  $x_{k,\cdot} = 1$ on $x_{kk}$, which would violate the first constraint which is
  also a contradiction.
 
- Hence $S_{TSP}$ must a permutation of $V$ defining a Hamiltonian tour. Since
+ Hence $S_{TSP}$ must be a permutation of $V$ defining a Hamiltonian tour. Since
  we selected $p_i \in S_{TSP}$ iff. $x_{p_{i-1} p_i} = 1$ we will also have that
   the path defined by $S_{TSP}$ will have the same cost as $S_{ILP}$.
  \end{proof}
