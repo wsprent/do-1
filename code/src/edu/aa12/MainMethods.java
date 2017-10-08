@@ -6,15 +6,15 @@ public class MainMethods {
 
 		// branch and bound
 		System.out.println("\nBRANCH and BOUND\n");
-		solveGraph(new Instance1());
-		// solveGraph(new Instance2());
-		// solveGraph(new Instance3());
+		//solveGraph(new Instance1());
+		solveGraph(new Instance2());
+		//solveGraph(new Instance3());
 
 		// cplex
 		System.out.println("\nCPLEX\n");
-		cplexSolveGraph(new Instance1());
-		// cplexSolveGraph(new Instance2());
-		// cplexSolveGraph(new Instance3());
+		//cplexSolveGraph(new Instance1());
+		cplexSolveGraph(new Instance2());
+		//cplexSolveGraph(new Instance3());
 	}
 
 	public static void solveGraph(Graph g) {
@@ -23,7 +23,7 @@ public class MainMethods {
 		BnBNode n = solver.solve();
 		long end = System.nanoTime();
 		System.out.printf("Took %.2fms\n",(end-start)/1000000.0);
-		System.out.println(n);
+		// System.out.println(n);
 		// Visualization.visualizeSolution(g, n);//Requires ProGAL (www.diku.dk/~rfonseca/ProGAL)
 	}
 

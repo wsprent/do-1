@@ -136,7 +136,7 @@ public class BranchAndBound_TSP {
 
         //return 0.0;
         //System.out.println(Double.toString(cost));
-        return cost + node.costOfIncludedEdges ;
+        return cost + node.costOfIncludedEdges;
 
         //TODO: See assignment text
 

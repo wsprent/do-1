@@ -18,7 +18,7 @@ public class Kruskal {
 	 * Find the minimum spanning tree in a graph where included edges in <code>node</code> are 
 	 * contracted and excluded edges in <code>node</code> are disregarded. 
 	 */
-	public List<Edge> minimumSpanningTree(final Graph graph, BnBNode node){
+    public List<Edge> minimumSpanningTree(final Graph graph, BnBNode node) {
 		for(Edge e: graph.edges){
 			nodes[e.u] = ds.makeSet(e.u);
 			nodes[e.v] = ds.makeSet(e.v); 
@@ -31,7 +31,7 @@ public class Kruskal {
 			else				mstEdges.remove(n.edge);						//Disregard excluded edges
 			n=n.parent;
 		}
-		
+
 		List<Edge> tmp = new ArrayList<Edge>(mstEdges);
 		Collections.sort(tmp, new Comparator<Edge>(){	//Sort edges in nondescending order
 			public int compare(Edge o1, Edge o2) {
