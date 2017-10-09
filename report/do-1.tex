@@ -152,8 +152,16 @@ In terms of n there are n*(n-1) constraints.
 The constraint states if there is an edge from vertex $i$ to $j$ such that $x_{ij} = 1$ the value of $t_{j}$ must be at least one greater than $t_{i}$. Thus the formulation has constraints consisting of $n$ possible values for $t_{i}$ and $(n-1)$ possible values for $t_{j}$ because the 1 vertex is not included in the $j$ set. For this reason the number of constraints in terms of n can be represented by $$n(n-1)$$
 
 \subsection{}
-Why subtour formulation might be preferred over compact formulation.
-Because the added t variable make the linear relaxation much weaker than the subtour. Further explanation needed.
+From Equation (1) provided in section 1.1 we obtain the subtour formulation of the Traveling Salesman Problem, an Integer Linear Programming Problem.
+Equation (2) found in section 1.3 represents the compact formulation from the lectures also representing the TSP. The subtour is shown in 1.2 to have $2^n - 2(n+1)$ constraints, this compared to the compact formulation that has a much smaller number of $n(n-1)$ constraints. 
+
+However, despite the much greater number of constraints in the subtour formulation, it may be preferred due to the added variables represented by $t_{i}$ and $t_{j}$. These added variables although provide much fewer restraints impose a much weaker linear relaxation when composed. Because of this the only way to solve the problem with the compact formulation is to eliminate those variables from the constraints. 
+
+
+It is for this reason that one may be in favor of using the subtour formulation and deal with the larger number of constraints opposed to the compact formulation.
+
+
+//More reasoning for why the linear relaxation is weaker may be required??//-
 
 \subsection{}
 We consider the subset of edges of $G$ consisting of a tree together with an additional edge incident to vertex 1 such that vertex 1 is in a cycle. For reference, we call this a 1-cycle. We wish to show that the minimum cost of the 1-cycle is a lower bound for for the minimum cost Hamiltonian tour.
