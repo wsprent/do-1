@@ -125,23 +125,27 @@ public class BranchAndBound_TSP {
         if(node.edgesDefined==graph.getVertices()) {
             return objectiveValue(node);
         }
-
-        List<Edge> MST = this.kruskal.minimumSpanningTree(this.graph, node);
-
-        double cost = 0.0;
-
-        for (Edge e : MST) {
-            cost += this.graph.getLength(e);
-        }
-
-        //return 0.0;
-        //System.out.println(Double.toString(cost));
-        return cost + node.costOfIncludedEdges;
-
-        //TODO: See assignment text
-
-
+		// return lowerBoundMst(node);
+		return lowerBound1Tree(node);
     }
+
+	public double lowerBoundMst(BnBNode node) {
+		List<Edge> MST = this.kruskal.minimumSpanningTree(this.graph, node);
+		double cost = 0.0;
+		for (Edge e : MST) {
+			cost += this.graph.getLength(e);
+		}
+		return cost + node.costOfIncludedEdges;
+	}
+
+	public double lowerBound1Tree(BnBNode node) {
+		List<Edge> onetree = this.kruskal.arbitrary1Tree(this.graph, node);
+		double cost = 0.0;
+		for (Edge e :onetree) {
+			cost += this.graph.getLength(e);
+		}
+		return cost + node.costOfIncludedEdges;
+	}
 
     /** Assuming that n represents a valid hamiltonian tour return the length of the tour */
     public double objectiveValue(BnBNode n){
