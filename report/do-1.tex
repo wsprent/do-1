@@ -4,6 +4,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage[round]{natbib}
+\usepackage[margin=1in]{geometry}  % set the margins to 1in on all sides
 \usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -187,7 +188,29 @@ We have extended the code which was handed out with the assignment with the foll
 With these additions, the program is able to solve all three instances in resonable both by using branch and bound and
  by solving the ILP formulation.
 \subsection{}
-Running time and number of nodes.
+We report the average running times for both implementations against all three problem instances in Table \ref{tab:res}.
+ Instances 1 and 2 were run a total of $50$ time each, where instance three was run only $10$ times.
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|}\hline
+    Instance& $n$ &Nodes (BNB)&Avg Running Time (BNB)& Avg Running Time (ILP) \\\hline
+    1 &$50$ & $12419$ & $177.08ms$ & $184.93ms$  \\
+    2 &$50$ &$243$ & $39.03ms$ & $1065.3ms$ \\
+    3 &$10$ &$2152036$ & $68124ms$ & $15934ms$ \\\hline
+  \end{tabular}
+  \caption{Number of branch and bound nodes as well as running times averaged over $n$ runs,
+    for both the branch and bound
+    and ILP implementations across the three instances.}
+  \label{tab:res}
+\end{table}
+
+We note that for instance one our two implementations perform similarly. For the second instance, the branch and bound
+implmentation sees a large decrease in both node-count and runtime even though the size of the problem is larger.
+Finally, the third instance sees an increase in running time for both algorithms.
+
+It's difficult to say anything general about our results. The results for the second instance seems to imply that there are
+problem instances which are particularly well suited for branch and bound implementations, while the results for the third
+ instance may imply that the Cplex implementation generally scales better with the problem size.
 
 \clearpage
 \bibliographystyle{abbrvnat}
