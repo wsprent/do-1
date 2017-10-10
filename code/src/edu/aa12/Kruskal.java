@@ -33,10 +33,7 @@ public class Kruskal {
         }
 
         List<Edge> tmp = new ArrayList<Edge>(mstEdges);
-        Collections.sort(tmp, new Comparator<Edge>(){    //Sort edges in nondescending order
-            public int compare(Edge o1, Edge o2) {
-                return Double.compare(graph.getDistance(o1.u, o1.v), graph.getDistance(o2.u, o2.v));
-            }});
+        Collections.sort(tmp, graph.edgeComparator);
 
         for(Edge e: tmp){ //Main loop of Kruskal
             if(ds.find(nodes[e.u])!=ds.find(nodes[e.v])){
@@ -82,11 +79,7 @@ public class Kruskal {
             }
         }
 
-        Comparator<Edge> comp = new Comparator<Edge>(){    //Sort edges in nondescending order
-            public int compare(Edge o1, Edge o2) {
-                return Double.compare(graph.getDistance(o1.u, o1.v), graph.getDistance(o2.u, o2.v));
-            }};
-        Collections.sort(mstEdges, comp);
+        Collections.sort(mstEdges, graph.edgeComparator);
 
         List<Edge> result = new ArrayList<Edge>();
         List<Edge> edges1 = new ArrayList<Edge>();
@@ -104,7 +97,7 @@ public class Kruskal {
 
         // reconnect vertex1 to the tree, 1-tree style
         if (edges1.size() >= 2) {
-            Collections.sort(edges1, comp);
+            Collections.sort(edges1, graph.edgeComparator);
             result.add(edges1.get(0));
             result.add(edges1.get(1));
         }
