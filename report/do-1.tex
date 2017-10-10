@@ -129,7 +129,7 @@ Because there are as many sets of size one and of size n-1 as there are vertices
 As well the empty and full set are unique sets and together amount to 2. 
 Thus the number of constraints in terms of n can be formulated to be $$2^n - 2(n+1)$$.
 
-Note that only half of the constraints are needed due to the symmetry of the subset formulation\footnote{Observation 10.2, Chapter 10, Wolsey.}, but the number of constraints will still be exponential in $n$.
+Note that only half of the constraints are needed due to the symmetry of the subset formulation, but the number of constraints will still be exponential in $n$ \citep[Observation 10.2]{Wolsey}.
 
 \subsection{}
 Equation (2) represents the compact formulation.  
@@ -158,8 +158,8 @@ The constraint states if there is an edge from vertex $i$ to $j$ such that $x_{i
 From Equation (1) provided in section 1.1 we obtain the subtour formulation of the Traveling Salesman Problem, an Integer Linear Programming Problem.
 Equation (2) found in section 1.3 represents the compact formulation from the lectures also representing the TSP. The subtour is shown in 1.2 to have $2^n - 2(n+1)$ constraints, this compared to the compact formulation that has a much smaller number of $n(n-1)$ constraints. 
 
-However, despite the much greater number of constraints in the subtour formulation, it may be preferred due to the added variables represented by $t_{i}$ and $t_{j}$. The exponential size of the subtour formulation can be mitigated because not all the inequalities have to be included initially, and can be generated as needed by a separation algorithm.\footnote{Teaching Integer Linear Programming Using the TSP}
-As well the added variables from the compact solution impose a much weaker linear relaxation when composed, although they provide much fewer restraints . One way of solving this is by summing the arc inequalities along a directed cycle.*** cite here
+However, despite the much greater number of constraints in the subtour formulation, it may be preferred due to the added variables represented by $t_{i}$ and $t_{j}$. The exponential size of the subtour formulation can be mitigated because not all the inequalities have to be included initially, and can be generated as needed by a separation algorithm \citep{Pataki}.
+As well the added variables from the compact solution impose a much weaker linear relaxation when composed, although they provide much fewer restraints . One way of solving this is by summing the arc inequalities along a directed cycle \citep{Pataki}.
 
 \subsection{}
 We consider the subset of edges of $G$ consisting of a tree together with an additional edge incident to vertex 1 such that vertex 1 is in a cycle. For reference, we call this a 1-cycle. We wish to show that the minimum cost of the 1-cycle is a lower bound for for the minimum cost Hamiltonian tour.
