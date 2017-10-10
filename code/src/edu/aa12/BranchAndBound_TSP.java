@@ -25,13 +25,13 @@ public class BranchAndBound_TSP {
     /** Find the shortest tour visiting all nodes exactly once and return the result as a BnBNode. */
     public BnBNode solve(){
         //Sorting edges by length might or might not help
-        //		Collections.sort(graph.edges, new Comparator<Edge>(){
-        //			public int compare(Edge arg0, Edge arg1) {
-        //				return -Double.compare(graph.getLength(arg0),graph.getLength(arg1));
-        //			}});
+        //        Collections.sort(graph.edges, new Comparator<Edge>(){
+        //            public int compare(Edge arg0, Edge arg1) {
+        //                return -Double.compare(graph.getLength(arg0),graph.getLength(arg1));
+        //            }});
 
         //The ordering in the nodePool determines which nodes gets polled first.
-        PriorityQueue<BnBNode> nodePool = new PriorityQueue<BnBNode>(10000,	new Comparator<BnBNode>(){
+        PriorityQueue<BnBNode> nodePool = new PriorityQueue<BnBNode>(10000,    new Comparator<BnBNode>(){
                 public int compare(BnBNode n0, BnBNode n1) {
                     return Double.compare(n0.lowerBound, n1.lowerBound);//Best-first
                     //return (n0.depth-n1.depth);//Breadth-first
@@ -125,27 +125,27 @@ public class BranchAndBound_TSP {
         if(node.edgesDefined==graph.getVertices()) {
             return objectiveValue(node);
         }
-		// return lowerBoundMst(node);
-		return lowerBound1Tree(node);
+        // return lowerBoundMst(node);
+        return lowerBound1Tree(node);
     }
 
-	public double lowerBoundMst(BnBNode node) {
-		List<Edge> MST = this.kruskal.minimumSpanningTree(this.graph, node);
-		double cost = 0.0;
-		for (Edge e : MST) {
-			cost += this.graph.getLength(e);
-		}
-		return cost + node.costOfIncludedEdges;
-	}
+    public double lowerBoundMst(BnBNode node) {
+        List<Edge> MST = this.kruskal.minimumSpanningTree(this.graph, node);
+        double cost = 0.0;
+        for (Edge e : MST) {
+            cost += this.graph.getLength(e);
+        }
+        return cost + node.costOfIncludedEdges;
+    }
 
-	public double lowerBound1Tree(BnBNode node) {
-		List<Edge> onetree = this.kruskal.arbitrary1Tree(this.graph, node);
-		double cost = 0.0;
-		for (Edge e :onetree) {
-			cost += this.graph.getLength(e);
-		}
-		return cost + node.costOfIncludedEdges;
-	}
+    public double lowerBound1Tree(BnBNode node) {
+        List<Edge> onetree = this.kruskal.arbitrary1Tree(this.graph, node);
+        double cost = 0.0;
+        for (Edge e :onetree) {
+            cost += this.graph.getLength(e);
+        }
+        return cost + node.costOfIncludedEdges;
+    }
 
     /** Assuming that n represents a valid hamiltonian tour return the length of the tour */
     public double objectiveValue(BnBNode n){
