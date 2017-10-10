@@ -13,7 +13,7 @@
 
 \begin{document}
 \title{Discrete Optimization Assignment 1}
-\author{William Sprent, Chi Pham, Quintin Hill}
+\author{Quintin Hill, Chi Pham, William Sprent}
 \maketitle
 \tableofcontents
 \clearpage
@@ -128,9 +128,9 @@ The constraints consist of all possible sets in V devoid of the S = V, the empty
 Because there are as many sets of size one and of size n-1 as there are vertices, it follows that these subsets that cannot be included in the constraints amount to 2n. 
 
 As well the empty and full set are unique sets and together amount to 2. 
-Thus the number of constraints in terms of n can be formulated to be $$2^n - 2(n+1)$$.
+Thus the number of constraints in terms of n can be formulated to be $$2^n - 2(n+1).$$
 
-Note that only half of the constraints are needed due to the symmetry of the subset formulation, but the number of constraints will still be exponential in $n$ \citep[Observation 10.2]{Wolsey}.
+Note that only half of the constraints are needed due to the symmetry of the subset formulation\citep[Observation 10.2]{Wolsey}, but the number of constraints will still be exponential in $n$.
 
 \subsection{}
 Equation (2) represents the compact formulation.  
@@ -160,7 +160,8 @@ From Equation (1) provided in section 1.1 we obtain the subtour formulation of t
 Equation (2) found in section 1.3 represents the compact formulation from the lectures also representing the TSP. The subtour is shown in 1.2 to have $2^n - 2(n+1)$ constraints, this compared to the compact formulation that has a much smaller number of $n(n-1)$ constraints. 
 
 However, despite the much greater number of constraints in the subtour formulation, it may be preferred due to the added variables represented by $t_{i}$ and $t_{j}$. The exponential size of the subtour formulation can be mitigated because not all the inequalities have to be included initially, and can be generated as needed by a separation algorithm \citep{Pataki}.
-As well the added variables from the compact solution impose a much weaker linear relaxation when composed, although they provide much fewer restraints . One way of solving this is by summing the arc inequalities along a directed cycle \citep{Pataki}.
+
+As well the added variables from the compact solution impose a much weaker linear relaxation than the subtour formulation. One way to show this is to express the $t$ constraints in terms of cycle constraints. These new constraints can be constructed in a way to have the same structure as the subtour constraints, but they will have a weaker bound, and thereby weaker linear relaxation. For more, see \citep{Pataki}.
 
 \subsection{}
 We consider the subset of edges of $G$ consisting of a tree together with an additional edge incident to vertex 1 such that vertex 1 is in a cycle. For reference, we call this a 1-cycle. We wish to show that the minimum cost of the 1-cycle is a lower bound for the minimum cost Hamiltonian tour.
@@ -177,7 +178,7 @@ Intuitively, the 1-cycle is similar to the 1-tree, but is a lower bound for the 
 \section{Implementation part - branch-and-bound}
 
 \subsection{}
-If we know the graph is complete, a simple heuristic for finding upper bounds for the TSP is to pick any Hamiltonian path by just traversing the vertices until we have visited all vertices, and then go back to the first edge. This is possible for complete graphs since we are guaranteed an edge to any unvisited vertex. If we have no guarantees on the structure of the graph, it is NP-hard to find a Hamiltonian path. The selection of the next vertex can be done greedily by picking the shortest edge to an unvisited vertex.\\
+If we know the graph is complete, a simple heuristic for finding upper bounds for the TSP is to pick any Hamiltonian path by just traversing the vertices until we have visited all vertices, and then go back to the first edge. This is possible for complete graphs since we are guaranteed an edge to any unvisited vertex. If we have no guarantees on the structure of the graph, it is NP-hard to find a Hamiltonian path. The selection of the next vertex can be done greedily by picking the shortest edge to an unvisited vertex.
 
 By implementing this upper bound heuristic and employing it on the first problem instance (which is a complete graph of 9 vertices), we get an upper bound of 9.41, which is indeed an upper bound for the optimal solution 8.649.
 
@@ -187,8 +188,21 @@ We have extended the code which was handed out with the assignment with the foll
 \item a 1-tree lower bound for the branch and bound solver, and
 \item a solver for the ILP MTZ formulation of the TSP problem using CPLEX as a backend.
 \end{itemize}
-With these additions, the program is able to solve all three instances in resonable both by using branch and bound and
+With these additions, the program is able to solve all three instances in reasonable time both by using branch and bound and
  by solving the ILP formulation.
+
+ \begin{table}[h!]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|}\hline
+    Instance & Optimal value \\\hline
+    1 &$8.649$ \\
+    2 &$19.030$ \\
+    3 &$26.753$ \\\hline
+  \end{tabular}
+  \caption{Optimal objective value results (path length) for each instance, output by both the branch and bound and ILP implementations.}
+  \label{tab:res}
+\end{table}
+
 \subsection{}
 We report the average running times for both implementations against all three problem instances in Table \ref{tab:res}.
  Instances 1 and 2 were run a total of $50$ time each, where instance three was run only $10$ times.
