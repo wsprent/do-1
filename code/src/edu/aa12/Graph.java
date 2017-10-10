@@ -1,6 +1,8 @@
 package edu.aa12;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,6 +14,7 @@ public abstract class Graph {
     /** An array of lists. The i'th entry indicates the edges adjacent to vertex i */
     public final List<Edge>[] incidentEdges;
     protected final double[][] distances;
+    public final Comparator<Edge> edgeComparator;
 
     @SuppressWarnings("unchecked")
     Graph(double[][] coords){
@@ -22,7 +25,10 @@ public abstract class Graph {
         for(int i=0;i<n;i++) incidentEdges[i]=new LinkedList<Edge>();
         this.distances = new double[n][n];
         for(int i=0;i<n;i++) for(int j=0;j<n;j++) distances[i][j] = Double.POSITIVE_INFINITY;
-
+        this.edgeComparator = new Comparator<Edge>(){    //Sort edges in nondescending order
+            public int compare(Edge o1, Edge o2) {
+                return Double.compare(getDistance(o1.u, o1.v), getDistance(o2.u, o2.v));
+            }};
     }
 
     public int getVertices(){ return vertexCoords.length; }
@@ -31,6 +37,41 @@ public abstract class Graph {
 
     public double getLength(Edge e){
         return distances[e.u][e.v];
+    }
+
+    // assumes complete graph, greedily selects hamiltonian path
+    public double getUpperBound() {
+        Comparator<Edge> comp = edgeComparator;
+        double bound = 0.0;
+        int n = getVertices();
+        int currentVertex = 0;
+        boolean[] vertices = new boolean[n];
+        vertices[currentVertex] = true;
+
+        for (int i = 0; i < n-1; i++) {
+            List<Edge> nextEdges = incidentEdges[currentVertex];
+            Collections.sort(nextEdges, comp);
+            Edge next = null;
+            for (Edge e : nextEdges) {
+                int other = e.u == currentVertex ? e.v : e.u;
+                if (!vertices[other]) {
+                    // not included this vertex yet
+                    vertices[other] = true;
+                    next = e;
+                    currentVertex = other;
+                    break;
+                }
+            }
+            bound += getLength(next);
+        }
+        for (Edge e: incidentEdges[currentVertex]) {
+            if (e.u == 0 || e.v == 0) {
+                // final edge
+                bound += getLength(e);
+                break;
+            }
+        }
+        return bound;
     }
 
     protected void createEdge(int i, int j){
