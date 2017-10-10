@@ -179,8 +179,13 @@ Intuitively, the 1-cycle is similar to the 1-tree, but is a lower bound for the 
 Upper bound, heuristic.
 
 \subsection{}
-Implementation \citep{Wolsey}.
-
+We have extended the code which was handed out with the assignment with the following,
+\begin{itemize}
+\item a 1-tree lower bound for the branch and bound solver, and
+\item a solver for the ILP MTZ formulation of the TSP problem using CPLEX as a backend.
+\end{itemize}
+With these additions, the program is able to solve all three instances in resonable both by using branch and bound and
+ by solving the ILP formulation.
 \subsection{}
 Running time and number of nodes.
 
